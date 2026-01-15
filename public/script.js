@@ -3,7 +3,22 @@ const videoGrid = document.getElementById('video-grid');
 const myVideo = document.createElement('video');
 myVideo.muted = true;
 
-var peer = new Peer();
+var peer = new Peer(undefined, {
+    path: '/peerjs',
+    host: location.hostname,
+    secure: true,
+    port: 443,
+    config: {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            {
+                urls: 'turn:openrelay.metered.ca:443',
+                username: 'openrelayproject',
+                credential: 'openrelayproject'
+            }
+        ]
+    }
+});
 
 let myVideoStream;
 navigator.mediaDevices.getUserMedia({

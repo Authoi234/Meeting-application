@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.set('trust proxy', 1);
 const server = require("http").Server(app);
 const io = require('socket.io')(server, {
     cors: {
@@ -9,8 +10,9 @@ const io = require('socket.io')(server, {
 }); const { v4: uuidv4 } = require('uuid');
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
-    debug: false
-})
+    debug: true,
+    path: '/'
+});
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
