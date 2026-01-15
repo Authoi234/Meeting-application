@@ -1,0 +1,194 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    ;
+}
+
+#video-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 100%;
+    padding: 5px;
+    align-items: center;
+}
+
+video {
+    flex: 0 0 auto;
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+
+.main {
+    height: 100vh;
+    display: flex;
+}
+
+.main_left {
+    flex: 0.2;
+    display: flex;
+    flex-direction: column;
+    background-color: #242324;
+    border: 1px solid #3d3d42;
+    height: 100vh;
+}
+
+.main_right {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+}
+
+.main_videos {
+    flex-grow: 1;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main_controls {
+    background: #0b0b0b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-top: 1px solid #1f1f1f;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+/* Groups */
+.main_controls_block {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+/* Buttons */
+.main_controls_button {
+    min-width: 72px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    color: #b5b5b5;
+    border-radius: 0px;
+    transition: background 0.4s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+/* Icons */
+.main_controls_button i {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* Labels */
+.main_controls_button span {
+    font-size: 0.72rem;
+    letter-spacing: 0.4px;
+    opacity: 0.9;
+}
+
+/* Hover */
+.main_controls_button:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* Active / pressed */
+.main_controls_button:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Special states */
+.main_controls_button.muted i {
+    color: #ff4d4d;
+}
+
+.main_controls_button.video-off i {
+    color: #ffb020;
+}
+
+/* Leave meeting */
+.main_controls_button.leave {
+    background: rgba(255, 77, 77, 0.15);
+    padding: 10px 16px;
+    border-radius: 0px;
+}
+
+.leave-meeting {
+    color: #ff4d4d;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.main_controls_button.leave:hover {
+    background: #ff4d4d;
+}
+
+.main_controls_button.leave:hover .leave-meeting {
+    color: #ffffff;
+}
+
+.main-header {
+    color: #F5F5F5;
+    text-align: center;
+}
+
+.main-chat-window {
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #565656 transparent;
+    scroll-behavior: smooth;
+}
+
+
+.main-message-container {
+    padding: 22px 12px;
+    width: 100%;
+    display: flex;
+}
+
+.main_controls_button i {
+    transition: color 0.25s ease;
+    animation: fadeIn 0.18s ease;
+}
+
+.unmute {
+    color: #d8180e;
+}
+
+.mute {
+    color: rgb(0, 181, 0)
+}
+
+.on {
+    color: #0066FF;
+}
+
+.stop {
+    color: #FFBF00;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
