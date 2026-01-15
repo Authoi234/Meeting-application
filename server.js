@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 const server = require("http").Server(app);
-const io = require('socket.io')(server);
-const { v4: uuidv4 } = require('uuid');
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+}); const { v4: uuidv4 } = require('uuid');
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
-    debug: true
+    debug: false
 })
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -26,7 +30,7 @@ io.on('connection', socket => {
         socket.on('message', message => {
             io.to(roomId).emit('createMessage', message);
         })
-    }); 
+    });
 });
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 5000);
