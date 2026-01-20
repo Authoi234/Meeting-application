@@ -3,24 +3,34 @@ const videoGrid = document.getElementById('video-grid');
 const myVideo = document.createElement('video');
 myVideo.muted = true;
 
-var peer = new Peer(undefined, {
+let peer;
+let myVideoStream;
+
+async function initPeer() {
+  const res = await fetch('/ice');
+  const iceServers = await res.json();
+
+  peer = new Peer(undefined, {
     path: '/peerjs',
     host: location.hostname,
     secure: true,
     port: 443,
-    config: {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            {
-                urls: 'turn:openrelay.metered.ca:443',
-                username: 'openrelayproject',
-                credential: 'openrelayproject'
-            }
-        ]
-    }
-});
+    config: { iceServers }
+  });
 
-let myVideoStream;
+  peer.on('open', id => {
+    socket.emit('join-room', ROOM_ID, id);
+  });
+
+  peer.on('call', call => {
+    call.answer(myVideoStream);
+    const video = document.createElement('video');
+    call.on('stream', userVideoStream => {
+      addVideoStream(video, userVideoStream);
+    });
+  });
+}
+
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
@@ -52,10 +62,6 @@ navigator.mediaDevices.getUserMedia({
         $('.messages').append(`<li class="list-group-item text-white"><b>User</b><br/>${message}</li>`)
         scrollToBottom()
     })
-})
-
-peer.on('open', id => {
-    socket.emit('join-room', ROOM_ID, id);
 })
 
 const connectToNewUser = (userId, stream) => {
