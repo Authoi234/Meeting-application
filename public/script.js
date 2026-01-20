@@ -6,6 +6,37 @@ myVideo.muted = true;
 let peer;
 let myVideoStream;
 
+/* ================= START APP ================= */
+(async function start() {
+  // 1️⃣ Get camera & mic FIRST
+  myVideoStream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+  });
+
+  addVideoStream(myVideo, myVideoStream);
+
+  // 2️⃣ Init Peer AFTER media
+  await initPeer();
+
+  // 3️⃣ Chat
+  let text = $('input');
+  $('html').keydown((e) => {
+    if (e.which === 13 && text.val().length !== 0) {
+      socket.emit('message', text.val());
+      text.val('');
+    }
+  });
+
+  socket.on('createMessage', message => {
+    $('.messages').append(
+      `<li class="list-group-item text-white"><b>User</b><br/>${message}</li>`
+    );
+    scrollToBottom();
+  });
+})();
+
+/* ================= PEER INIT ================= */
 async function initPeer() {
   const res = await fetch('/ice');
   const iceServers = await res.json();
@@ -22,6 +53,7 @@ async function initPeer() {
     socket.emit('join-room', ROOM_ID, id);
   });
 
+  // ✅ SINGLE call handler
   peer.on('call', call => {
     call.answer(myVideoStream);
     const video = document.createElement('video');
@@ -29,115 +61,84 @@ async function initPeer() {
       addVideoStream(video, userVideoStream);
     });
   });
+
+  socket.on('user-connected', userId => {
+    connectToNewUser(userId);
+  });
 }
 
-navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true
-}).then(stream => {
-    myVideoStream = stream;
-    addVideoStream(myVideo, stream)
-
-    peer.on('call', call => {
-        call.answer(stream)
-        const video = document.createElement('video')
-        call.on('stream', userVideoStream => {
-            addVideoStream(video, userVideoStream)
-        })
-    })
-
-    socket.on('user-connected', userId => {
-        connectToNewUser(userId, stream)
-    })
-
-    let text = $('input');
-
-    $('html').keydown((e) => {
-        if (e.which == 13 && text.val().length !== 0) {
-            socket.emit('message', text.val());
-            text.val('');
-        }
-    })
-    socket.on('createMessage', message => {
-        $('.messages').append(`<li class="list-group-item text-white"><b>User</b><br/>${message}</li>`)
-        scrollToBottom()
-    })
-})
-
-const connectToNewUser = (userId, stream) => {
-    const call = peer.call(userId, stream);
-    const video = document.createElement('video');
-    call.on('stream', userVideoStream => {
-        addVideoStream(video, userVideoStream);
-    })
-};
-
-const addVideoStream = (video, stream) => {
-    video.srcObject = stream;
-    video.addEventListener('loadedmetadata', () => {
-        video.play();
-    })
-    videoGrid.append(video)
+/* ================= CALL NEW USER ================= */
+function connectToNewUser(userId) {
+  const call = peer.call(userId, myVideoStream);
+  const video = document.createElement('video');
+  call.on('stream', userVideoStream => {
+    addVideoStream(video, userVideoStream);
+  });
 }
 
-const scrollToBottom = () => {
-    var d = $('.main-chat-window');
-    d.scrollTop(d.prop("scrollHeight"));
+/* ================= VIDEO ================= */
+function addVideoStream(video, stream) {
+  video.srcObject = stream;
+  video.addEventListener('loadedmetadata', () => {
+    video.play();
+  });
+  videoGrid.append(video);
 }
 
-const MuteUnmute = () => {
-    const enabled = myVideoStream.getAudioTracks()[0].enabled;
-    if (enabled) {
-        myVideoStream.getAudioTracks()[0].enabled = false;
-        setUnMuteButton();
-    }
-    else {
-        setMuteButton();
-        myVideoStream.getAudioTracks()[0].enabled = true;
-    }
+/* ================= CHAT ================= */
+function scrollToBottom() {
+  const d = $('.main-chat-window');
+  d.scrollTop(d.prop('scrollHeight'));
 }
 
-const setMuteButton = () => {
-    const html = `
-        <i class="mute fas fa-microphone"></i>
-        <span>Mute</span>
-    `;
-    document.querySelector('.main-mute-btn').innerHTML = html;
+/* ================= AUDIO ================= */
+function MuteUnmute() {
+  const enabled = myVideoStream.getAudioTracks()[0].enabled;
+  if (enabled) {
+    myVideoStream.getAudioTracks()[0].enabled = false;
+    setUnMuteButton();
+  } else {
+    myVideoStream.getAudioTracks()[0].enabled = true;
+    setMuteButton();
+  }
 }
 
-const setUnMuteButton = () => {
-    const html = `
-        <i class="unmute fas fa-microphone-slash"></i>
-        <span>Unmute</span>
-    `;
-    document.querySelector('.main-mute-btn').innerHTML = html;
-
+function setMuteButton() {
+  document.querySelector('.main-mute-btn').innerHTML = `
+    <i class="mute fas fa-microphone"></i>
+    <span>Mute</span>
+  `;
 }
 
-const playStop = () => {
-    let enabled = myVideoStream.getVideoTracks()[0].enabled;
-    if (enabled) {
-        myVideoStream.getVideoTracks()[0].enabled = false;
-        setPlayVideo();
-    }
-    else {
-        setStopVideo();
-        myVideoStream.getVideoTracks()[0].enabled = true;
-    }
+function setUnMuteButton() {
+  document.querySelector('.main-mute-btn').innerHTML = `
+    <i class="unmute fas fa-microphone-slash"></i>
+    <span>Unmute</span>
+  `;
 }
 
-const setStopVideo = () => {
-    const html = `
-        <i class="on fas fa-video"></i>
-        <span>Stop Video</span>
-    `;
-    document.querySelector('.main-video-btn').innerHTML = html;
+/* ================= VIDEO TOGGLE ================= */
+function playStop() {
+  let enabled = myVideoStream.getVideoTracks()[0].enabled;
+  if (enabled) {
+    myVideoStream.getVideoTracks()[0].enabled = false;
+    setPlayVideo();
+  } else {
+    myVideoStream.getVideoTracks()[0].enabled = true;
+    setStopVideo();
+  }
 }
 
-const setPlayVideo = () => {
-    const html = `
-        <i class="stop fas fa-video-slash"></i>
-        <span>Play Video</span>
-    `;
-    document.querySelector('.main-video-btn').innerHTML = html;
+function setStopVideo() {
+  document.querySelector('.main-video-btn').innerHTML = `
+    <i class="on fas fa-video"></i>
+    <span>Stop Video</span>
+  `;
+}
+
+function setPlayVideo() {
+  document.querySelector('.main-video-btn').innerHTML = `
+    <i class="stop fas fa-video-slash"></i>
+    <span>Play Video</span>
+  `;
 }
