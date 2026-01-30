@@ -39,7 +39,15 @@ let myVideoStream;
 /* ================= PEER INIT ================= */
 async function initPeer() {
   const res = await fetch('/ice');
-  const iceServers = await res.json();
+  const data = await res.json();
+
+  const iceServers = [
+    {
+      urls: data.urls,
+      username: data.username,
+      credential: data.credential
+    }
+  ];
 
   peer = new Peer(undefined, {
     path: '/peerjs',
@@ -50,11 +58,12 @@ async function initPeer() {
   });
 
   peer.on('open', id => {
+    console.log('peer open:', id);
     socket.emit('join-room', ROOM_ID, id);
   });
 
-  // ✅ SINGLE call handler
   peer.on('call', call => {
+    console.log('incoming call');
     call.answer(myVideoStream);
     const video = document.createElement('video');
     call.on('stream', userVideoStream => {
@@ -63,9 +72,11 @@ async function initPeer() {
   });
 
   socket.on('user-connected', userId => {
+    console.log('calling user', userId);
     connectToNewUser(userId);
   });
 }
+
 
 /* ================= CALL NEW USER ================= */
 function connectToNewUser(userId) {
