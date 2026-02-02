@@ -1,3 +1,38 @@
+const chatHeader = document.querySelector('.main-header');
+const chatPanel = document.querySelector('.main_left');
+
+if (chatHeader && chatPanel && !document.getElementById('chat-close')) {
+  const closeBtn = document.createElement('span');
+  closeBtn.id = 'chat-close';
+  closeBtn.innerHTML = '&times;';
+  chatHeader.appendChild(closeBtn);
+
+  closeBtn.addEventListener('click', () => {
+    chatPanel.classList.remove('active');
+  });
+}
+
+
+const peers = {};
+
+function getUserPayload() {
+  const user = window.currentUser;
+
+  if (!user) {
+    return {
+      uid: 'guest',
+      name: 'Guest',
+      photo: 'https://www.pngkey.com/png/full/204-2049354_ic-account-box-48px-profile-picture-icon-square.png'
+    };
+  }
+
+  return {
+    uid: user.uid,
+    name: user.displayName || user.email || 'User',
+    photo: user.photoURL || 'https://www.pngkey.com/png/full/204-2049354_ic-account-box-48px-profile-picture-icon-square.png'
+  };
+}
+
 const socket = io('/');
 const videoGrid = document.getElementById('video-grid');
 const myVideo = document.createElement('video');
@@ -7,7 +42,9 @@ let peer;
 let myVideoStream;
 
 /* ================= START APP ================= */
-(async function start() {
+
+
+async function start() {
   // 1️⃣ Get camera & mic FIRST
   myVideoStream = await navigator.mediaDevices.getUserMedia({
     video: true,
@@ -23,17 +60,43 @@ let myVideoStream;
   let text = $('input');
   $('html').keydown((e) => {
     if (e.which === 13 && text.val().length !== 0) {
-      socket.emit('message', text.val());
+      const payload = {
+        text: text.val(),
+        user: getUserPayload()
+      };
+
+      socket.emit('message', payload);
       text.val('');
     }
   });
 
-  socket.on('createMessage', message => {
-    $('.messages').append(
-      `<li class="list-group-item text-white"><b>User</b><br/>${message}</li>`
-    );
+  socket.on('createMessage', ({ text, user }) => {
+    $('.messages').append(`
+    <li class="flex gap-0 items-start p-2 text-white">
+      <div>
+         <img src="${user.photo}" class="w-10 h-10 rounded-full" />
+    <p class="text-sm mb-0 leading-tight opacity-80">${user.name}</p>
+      </div>
+      <div class="flex flex-col ">
+        <div class="chat chat-start ">
+          <div class="chat-bubble chat-bubble-primary">
+            ${text}
+          </div>
+       </div>
+      </div>
+    </li>
+    `);
+
     scrollToBottom();
   });
+};
+
+(async function waitForAuthThenStart() {
+  while (window.currentUser === null) {
+    await new Promise(r => setTimeout(r, 50));
+  }
+
+  start();
 })();
 
 /* ================= PEER INIT ================= */
@@ -52,8 +115,8 @@ async function initPeer() {
   peer = new Peer(undefined, {
     path: '/peerjs',
     host: location.hostname,
-    secure: true,
-    port: 443,
+    port: location.protocol === 'https:' ? 443 : location.port,
+    secure: location.protocol === 'https:',
     config: { iceServers }
   });
 
@@ -63,12 +126,25 @@ async function initPeer() {
   });
 
   peer.on('call', call => {
-    console.log('incoming call');
     call.answer(myVideoStream);
     const video = document.createElement('video');
+
     call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream);
     });
+
+    call.on('close', () => {
+      video.remove();
+    });
+  });
+
+  socket.on('user-disconnected', userId => {
+    console.log('user disconnected:', userId);
+
+    if (peers[userId]) {
+      peers[userId].close();
+      delete peers[userId];
+    }
   });
 
   socket.on('user-connected', userId => {
@@ -82,11 +158,17 @@ async function initPeer() {
 function connectToNewUser(userId) {
   const call = peer.call(userId, myVideoStream);
   const video = document.createElement('video');
+
+  peers[userId] = call;
+
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream);
   });
-}
 
+  call.on('close', () => {
+    video.remove();
+  });
+}
 /* ================= VIDEO ================= */
 function addVideoStream(video, stream) {
   video.srcObject = stream;

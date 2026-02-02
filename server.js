@@ -2,25 +2,27 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 app.set('trust proxy', 1);
+require('dotenv').config();
 const server = require("http").Server(app);
 const io = require('socket.io')(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
 }); const { v4: uuidv4 } = require('uuid');
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
-    debug: true,
-    path: '/'
+  debug: true,
+  path: '/'
 });
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 app.use('/peerjs', peerServer);
+
 app.get('/', (req, res) => {
-    res.redirect(`/${uuidv4()}`);
-})
+  res.render('index');
+});
 
 app.get('/ice', async (req, res) => {
   try {
@@ -29,8 +31,8 @@ app.get('/ice', async (req, res) => {
       { format: 'urls' },
       {
         auth: {
-          username: 'Authoi123',
-          password: '90a89022-f5d6-11f0-a5e2-0242ac140002'
+          username: process.env.ICE_SERVER_USERNAME,
+          password: process.env.ICE_SERVER_PASSWORD
         }
       }
     );
@@ -41,18 +43,34 @@ app.get('/ice', async (req, res) => {
   }
 });
 
-app.get('/:room', (req, res) => {
-    res.render('room', { roomId: req.params.room });
+app.get('/meeting', (req, res) => {
+  res.redirect(`/meeting/${uuidv4()}`);
 })
 
+app.get('/meeting/:room', (req, res) => {
+  res.render('room', { roomId: req.params.room });
+})
+
+
 io.on('connection', socket => {
-    socket.on('join-room', (roomId, userId) => {
-        socket.join(roomId);
-        socket.to(roomId).emit('user-connected', userId);
-        socket.on('message', message => {
-            io.to(roomId).emit('createMessage', message);
-        })
-    });
+  let currentRoom = null;
+
+  socket.on('join-room', (roomId, userId) => {
+    currentRoom = roomId;
+    socket.join(roomId);
+    socket.to(roomId).emit('user-connected', userId);
+  });
+
+  socket.on('message', data => {
+    if (!currentRoom) return;
+    io.to(currentRoom).emit('createMessage', data);
+  });
+
+  socket.on('disconnect', () => {
+    if (currentRoom) {
+      socket.to(currentRoom).emit('user-disconnected', socket.id);
+    }
+  });
 });
 
 

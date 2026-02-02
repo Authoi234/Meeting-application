@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Meeting App</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-base-100 text-base-content">
+
+  <!-- Navbar -->
+  <div class="navbar bg-base-100 px-6 shadow-sm">
+    <div class="flex-1">
+      <a class="text-xl font-bold">Authoi Meet</a>
+    </div>
+    <div class="flex-none">
+      <button id="startMeeting" class="btn btn-primary">
+        Start Meeting
+      </button>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="min-h-[90vh] flex items-center">
+    <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+      <!-- Text Section -->
+      <div class="text-center lg:text-left">
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+          <span>
+            <p class="text-transparent bg-gradient-to-r to-rose-600 from-violet-600 bg-clip-text">Authoi's</p>
+            <p class="text-sm">Instructed by <span
+                class="text-transparent bg-gradient-to-r from-rose-600 via-violet-600 to-sky-500 bg-clip-text">Jaber
+                Ahmed</span></p>Secure Video
+          </span>
+
+          <span class="text-primary">Meetings</span>
+        </h1>
+
+        <p class="mt-6 text-lg text-gray-500">
+          Host and join high-quality video meetings instantly.
+          No downloads. No hassle. Just click and connect.
+        </p>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <button class="btn btn-primary btn-lg" onclick="document.getElementById('authModal').showModal()">
+            Get Started
+          </button>
+
+          <button class="btn btn-outline btn-lg">
+            Learn More
+          </button>
+        </div>
+      </div>
+
+      <!-- Image Section -->
+      <div class="w-full max-w-2xl aspect-video rounded-2xl bg-no-repeat bg-cover bg-center"
+        style="background-image: url('/hero-image.png');">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="py-20 relative overflow-hidden">
+    <!-- Background image -->
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/bg-balls.png');"></div>
+
+    <!-- Optional subtle gradient overlay for depth -->
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-200/20 via-pink-200/10 to-blue-200/20"></div>
+
+    <div class="container mx-auto px-6 text-center relative z-10">
+      <h2 class="text-3xl font-bold mb-12">
+        Why Choose Authoi Meet (Vippem - Visage Peer to Peer Meeting)?
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+
+        <!-- Card 1 -->
+        <a href="#" class="cursor-pointer hover:scale-105  transition-transform duration-300">
+          <div class="card w-full max-w-sm
+                    bg-white/20
+                    backdrop-blur-2xl
+                    border border-white/30
+                    rounded-3xl
+                    shadow-lg shadow-white/20
+                    relative overflow-hidden
+                    text-white
+                    transition-all duration-300
+                    hover:shadow-white/40">
+            <!-- Optional overlay for extra contrast -->
+            <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+
+            <div class="card-body relative p-6 sm:p-8">
+              <h3 class="card-title">⚡ Fast</h3>
+              <p>Join meetings instantly with minimal latency.</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="#" class="cursor-pointer hover:scale-105  transition-transform duration-300">
+          <div class="card w-full max-w-sm
+                    bg-white/20
+                    backdrop-blur-2xl
+                    border border-white/30
+                    rounded-3xl
+                    shadow-lg shadow-white/20
+                    relative overflow-hidden
+                    text-white
+                    transition-all duration-300
+                    hover:shadow-white/40">
+            <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+
+            <div class="card-body relative p-6 sm:p-8">
+              <h3 class="card-title">🔒 Secure</h3>
+              <p>Firebase-powered authentication keeps meetings safe.</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="#" class="cursor-pointer hover:scale-105  transition-transform duration-300">
+          <div class="card w-full max-w-sm
+                    bg-white/20
+                    backdrop-blur-2xl
+                    border border-white/30
+                    rounded-3xl
+                    shadow-lg shadow-white/20
+                    relative overflow-hidden
+                    text-white
+                    transition-all duration-300
+                    hover:shadow-white/40">
+            <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+
+            <div class="card-body relative p-6 sm:p-8">
+              <h3 class="card-title">🌍 Anywhere</h3>
+              <p>Works smoothly on mobile, tablet, and desktop.</p>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-base-200 text-base-content pt-12">
+    <!-- Top links section -->
+    <div
+      class="container mx-auto px-6 flex flex-col md:flex-row justify-between gap-10 md:gap-0 text-center md:text-left">
+
+      <!-- Services -->
+      <div class="flex-1">
+        <h6 class="footer-title mb-4">Services</h6>
+        <div class="flex flex-col gap-2">
+          <a class="link link-hover">Branding</a>
+          <a class="link link-hover">Design</a>
+          <a class="link link-hover">Marketing</a>
+          <a class="link link-hover">Advertisement</a>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div class="flex-1">
+        <h6 class="footer-title mb-4">Company</h6>
+        <div class="flex flex-col gap-2">
+          <a class="link link-hover">About us</a>
+          <a class="link link-hover">Contact</a>
+          <a class="link link-hover">Jobs</a>
+          <a class="link link-hover">Press kit</a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div class="flex-1">
+        <h6 class="footer-title mb-4">Legal</h6>
+        <div class="flex flex-col gap-2">
+          <a class="link link-hover">Terms of use</a>
+          <a class="link link-hover">Privacy policy</a>
+          <a class="link link-hover">Cookie policy</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-base-300 my-8"></div>
+
+    <!-- Branding + Socials -->
+    <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+
+      <!-- Branding -->
+      <div class="flex items-center gap-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" class="fill-current">
+          <path
+            d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z">
+          </path>
+        </svg>
+        <p class="text-sm">
+          ACME Industries Ltd.<br>
+          Providing reliable tech since 1992
+        </p>
+      </div>
+
+      <!-- Socials -->
+      <div class="flex flex-col md:flex-row gap-4 md:gap-8 text-center md:text-left mb-12">
+        <div>
+          <h6 class="font-semibold mb-2">Mentor's Instructor's Socials</h6>
+          <div class="flex gap-4 justify-center md:justify-start">
+            <a href="https://www.linkedin.com/in/jaber4770/" target="_blank"
+              class="hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#0077B5" viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+            <a href="https://www.youtube.com/@Jack_Sargey" target="_blank" class="hover:scale-110 transition-transform">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF0000" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/jacksargey1/" target="_blank"
+              class="hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="fill-current">
+                <path
+                  d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h6 class="font-semibold mb-2">My Socials</h6>
+          <div class="flex gap-4 justify-center md:justify-start">
+            <a href="https://www.linkedin.com/in/jawad-jabbar-khan-authoi-0934a7244/" target="_blank"
+              class="hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#0077B5" viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+            <a href="https://www.youtube.com/@JawadJabbarKhanAuthoi" target="_blank"
+              class="hover:scale-110 transition-transform">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF0000" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+            </a>
+            <a href="#" class="hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="fill-current">
+                <path
+                  d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+
+
+
+  <!-- Auth Modal -->
+  <dialog id="authModal" class="modal">
+    <div class="modal-box max-w-md">
+      <h3 class="font-bold text-lg mb-4">Authentication</h3>
+
+      <!-- Tabs -->
+      <div role="tablist" class="tabs tabs-boxed">
+        <a role="tab" class="tab tab-active" id="loginTab">Login</a>
+        <a role="tab" class="tab" id="signupTab">Create Account</a>
+      </div>
+
+      <!-- Login -->
+      <div id="loginPanel" class="mt-4">
+        <input id="loginEmail" type="email" placeholder="Email" class="input input-bordered w-full mb-3" />
+        <input id="loginPassword" type="password" placeholder="Password" class="input input-bordered w-full mb-4" />
+        <button class="btn btn-primary w-full" onclick="login()">Login</button>
+      </div>
+
+      <!-- Signup -->
+      <div id="signupPanel" class="mt-4 hidden">
+
+        <input id="signupName" type="text" placeholder="Smallest Nickame" required
+          class="input input-bordered w-full mb-3" />
+
+        <input id="signupPhoto" type="url" placeholder="Photo URL (optional)"
+          class="input input-bordered w-full mb-3" />
+
+        <input id="signupEmail" type="email" placeholder="Email" required class="input input-bordered w-full mb-3" />
+
+        <input id="signupPassword" type="password" placeholder="Password" required
+          class="input input-bordered w-full mb-4" />
+
+        <button class="btn btn-success w-full text-white" onclick="signup()">
+          Create Account
+        </button>
+      </div>
+
+
+
+      <div class="modal-action">
+        <form method="dialog">
+          <button class="btn">Close</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Tab Logic -->
+  <script>
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginPanel = document.getElementById('loginPanel');
+    const signupPanel = document.getElementById('signupPanel');
+
+    loginTab.onclick = () => {
+      loginTab.classList.add('tab-active');
+      signupTab.classList.remove('tab-active');
+      loginPanel.classList.remove('hidden');
+      signupPanel.classList.add('hidden');
+    };
+
+    signupTab.onclick = () => {
+      signupTab.classList.add('tab-active');
+      loginTab.classList.remove('tab-active');
+      signupPanel.classList.remove('hidden');
+      loginPanel.classList.add('hidden');
+    };
+  </script>
+
+  <script type="module" src="/auth.js"></script>
+
+</body>
+
+</html>
